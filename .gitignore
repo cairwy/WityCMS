@@ -6,3 +6,4 @@ system/config/route.php
 doc/
 upload/[^.]*/
 system/wity.log
+*.bak

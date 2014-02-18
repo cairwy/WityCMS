@@ -3,7 +3,7 @@
  * User Application - Front Model
  */
 
-defined('IN_WITY') or die('Access denied');
+defined('WITYCMS_VERSION') or die('Access denied');
 
 /**
  * UserModel is the Front Model of the User Application.
@@ -168,7 +168,7 @@ class UserModel {
 		
 		$prep = $this->db->prepare('
 			SELECT users.id, nickname, email, firstname, lastname, country, lang, groupe, 
-				users.access, valid, ip, name AS groupe_name, last_activity, users.created_date
+				CONCAT_WS(\',\', users.access, users_groups.access) AS access, valid, ip, name AS groupe_name, last_activity, users.created_date
 			FROM users
 			LEFT JOIN users_groups
 			ON groupe = users_groups.id
@@ -192,7 +192,7 @@ class UserModel {
 	public function getUser($user_id) {
 		$prep = $this->db->prepare('
 			SELECT users.id, nickname, password, email, firstname, lastname, country, lang, groupe, 
-				users.access, valid, ip, name AS groupe_name, last_activity, users.created_date
+				CONCAT_WS(\',\', users.access, users_groups.access) AS access, valid, ip, name AS groupe_name, last_activity, users.created_date
 			FROM users
 			LEFT JOIN users_groups
 			ON groupe = users_groups.id
@@ -213,8 +213,10 @@ class UserModel {
 	 */
 	public function matchUser($nickname, $password) {
 		$prep = $this->db->prepare('
-			SELECT id, nickname, password, email, firstname, lastname, country, lang, groupe, access
+			SELECT users.id, nickname, password, email, firstname, lastname, country, lang, groupe, CONCAT_WS(\',\', users.access, users_groups.access) AS access
 			FROM users
+			LEFT JOIN users_groups
+			ON groupe = users_groups.id
 			WHERE (nickname = :nickname OR email = :nickname) AND password = :password AND valid = 1
 		');
 		$prep->bindParam(':nickname', $nickname);

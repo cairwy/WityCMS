@@ -351,7 +351,7 @@ abstract class WController {
 		$manifest = array();
 
 		// Nodes to look for
-		$nodes = array('name', 'version', 'date', 'icone', 'action', 'admin', 'permission', 'default_lang');
+		$nodes = array('name', 'version', 'date', 'icone', 'action', 'admin', 'permission', 'default_lang', 'app_config');
 		foreach ($nodes as $node) {
 			switch ($node) {
 				case 'action':
@@ -446,7 +446,21 @@ abstract class WController {
 				case 'name':
 					$manifest['name'] = property_exists($xml, 'name') ? (string) $xml->name : basename(dirname($manifest_href));
 					break;
+					
+				case 'app_config':
+					if (property_exists($xml, 'app_config')) {
+						foreach ($xml->app_config as $var) {
+							$attributes = $var->attributes();
+							$key = (string) $attributes['name'];
+							$default = (string) $attributes['default'];
 
+							if (!empty($key)) {
+								$manifest['app_config'][$key] = $default;
+							}
+						}
+					}
+					break;
+					
 				default:
 					$manifest[$node] = property_exists($xml, $node) ? (string) $xml->$node : '';
 					break;

@@ -259,7 +259,11 @@ class WRequest {
 	 * @return bool true if data available
 	 */
 	public static function hasData() {
-		return !empty($_REQUEST) && !in_array(null, $_REQUEST, true) && !self::$lock;
+		//$excluded_data = WConfig::get('config.excluded');
+		//$excluded_data = $_COOKIE;
+		$excluded_data = array();
+		$tested_data = array_diff_key($_REQUEST, $excluded_data);
+		return !empty($tested_data) && !in_array(null, $tested_data, true) && !self::$lock;
 	}
 	
 	/**

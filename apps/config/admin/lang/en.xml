@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lang value="en">
+	<!-- Actions -->
+	<item id="site">Manage site</item>
+	<item id="database">Manage database</item>
+</lang>

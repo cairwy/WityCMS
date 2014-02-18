@@ -304,7 +304,7 @@ class MailController extends WController {
 
 			$this->phpmailer->msgHTML(self::$tpl->parse($params['body']));
 		} else {
-			$this->phpmailer->msgHTML(self::$tpl->parseString($params['body']));
+			$this->phpmailer->Body = self::$tpl->parseString($params['body']);
 		}
 
 		if (!$this->phpmailer->send()) {
